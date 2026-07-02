@@ -7,15 +7,22 @@ const revealGroups = [
   { selector: ".expertise-command-header, .expertise-command-footer", type: "rise", delay: 80 },
   { selector: ".expertise-reactor", type: "scale", delay: 0 },
   { selector: ".expertise-satellite", type: "card", delay: 90 },
-  { selector: ".profile > .container .section-kicker, .profile > .container h2, .profile .section-intro", type: "rise", delay: 80 },
+  { selector: ".profile > .portfolio-container .section-kicker, .profile > .portfolio-container h2, .profile .section-intro", type: "rise", delay: 80 },
   { selector: ".profile-tabs", type: "scale", delay: 0 },
   { selector: ".profile-subheading, .archive-header, .operations-header, .archive-section-label", type: "rise", delay: 70 },
   { selector: ".academic-record, .credential-record, .achievement-file, .operation-card, .skill-hologram", type: "card", delay: 85 },
+  { selector: ".cv-copy", type: "left", delay: 0 },
+  { selector: ".cv-document", type: "right", delay: 0 },
+  { selector: ".case-studies-header", type: "rise", delay: 0 },
+  { selector: ".case-study-card, .case-study-dossier", type: "card", delay: 90 },
+  { selector: ".now-visual", type: "scale", delay: 0 },
+  { selector: ".now-copy", type: "right", delay: 70 },
+  { selector: ".research-notebook", type: "rise", delay: 0 },
   { selector: ".contact-section-header", type: "rise", delay: 0 },
   { selector: ".contact-visual", type: "left", delay: 0 },
   { selector: ".secure-composer", type: "right", delay: 95 },
   { selector: ".footer-cta", type: "scale", delay: 0 },
-  { selector: ".footer > .container > .row", type: "rise", delay: 80 }
+  { selector: ".footer .portfolio-container > div:last-child", type: "rise", delay: 80 }
 ];
 
 export const ScrollEffects = () => {
@@ -25,6 +32,9 @@ export const ScrollEffects = () => {
       typeof window.matchMedia === "function" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const supportsIntersectionObserver = typeof window.IntersectionObserver === "function";
+    const compactViewport =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(max-width: 767px)").matches;
     const revealElements = [];
 
     root.classList.add("js-scroll-motion");
@@ -93,7 +103,15 @@ export const ScrollEffects = () => {
     revealElements.forEach((element) => observer.observe(element));
     revealElementsInView();
 
-    const sections = [...document.querySelectorAll(".skill, .profile, .contact")];
+    if (compactViewport) {
+      return () => {
+        observer.disconnect();
+        root.classList.remove("js-scroll-motion");
+        cleanRevealAttributes();
+      };
+    }
+
+    const sections = [...document.querySelectorAll(".skill, .profile, .cv-preview, .case-studies, .now-section, .contact")];
     let targetScroll = window.scrollY;
     let currentScroll = targetScroll;
     let animationFrame = null;

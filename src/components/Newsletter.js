@@ -1,46 +1,48 @@
 import { useState, useEffect } from "react";
-import { Col, Row, Alert } from "react-bootstrap";
 
 export const Newsletter = ({ status, message, onValidated }) => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
-    if (status === 'success') clearFields();
-  }, [status])
+    if (status === "success") setEmail("");
+  }, [status]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    email &&
-    email.indexOf("@") > -1 &&
-    onValidated({
-      EMAIL: email
-    })
-  }
-
-  const clearFields = () => {
-    setEmail('');
-  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (email && email.indexOf("@") > -1) {
+      onValidated({ EMAIL: email });
+    }
+  };
 
   return (
-      <Col lg={12}>
-        <div className="newsletter-bx wow slideInUp">
-          <Row>
-            <Col lg={12} md={6} xl={5}>
-              <h3>Get in touch so you<br></br> never miss the latest updates</h3>
-              {status === 'sending' && <Alert>Sending...</Alert>}
-              {status === 'error' && <Alert variant="danger">{message}</Alert>}
-              {status === 'success' && <Alert variant="success">{message}</Alert>}
-            </Col>
-            <Col md={6} xl={7}>
-              <form onSubmit={handleSubmit}>
-                <div className="new-email-bx">
-                  <input value={email} type="email" onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" />
-                  <button type="submit">Submit</button>
-                </div>
-              </form>
-            </Col>
-          </Row>
+    <div className="glass-panel p-6 sm:p-8">
+      <div className="grid gap-6 md:grid-cols-[0.8fr_1.2fr] md:items-center">
+        <div>
+          <h3 className="text-2xl font-bold text-white">
+            Get in touch so you never miss the latest updates
+          </h3>
+          {status === "sending" && <p className="mt-3 text-sm text-electric-cyan">Sending...</p>}
+          {status === "error" && <p className="mt-3 text-sm text-[#ff9caf]">{message}</p>}
+          {status === "success" && <p className="mt-3 text-sm text-electric-green">{message}</p>}
         </div>
-      </Col>
-  )
-}
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-3 border border-white/10 bg-white/[0.035] p-2 sm:flex-row">
+            <input
+              className="min-h-12 flex-1 bg-transparent px-3 text-white outline-none placeholder:text-white/35"
+              value={email}
+              type="email"
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="Email Address"
+            />
+            <button
+              className="min-h-12 bg-gradient-to-r from-electric-pink to-electric-violet px-6 text-sm font-bold text-white"
+              type="submit"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
